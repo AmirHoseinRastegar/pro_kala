@@ -32,8 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  int _current = 0;
-
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -47,7 +45,54 @@ class _HomeScreenState extends State<HomeScreen> {
               return const ShimmerLoading();
             } else if (state is HomeSuccess) {
               HomeModel homeModel = state.homeModel;
-              return CarouselSection(homeModel: homeModel);
+              return RefreshIndicator(
+                onRefresh: () async {
+                  BlocProvider.of<HomeBloc>(context).add(CallApiEvent());
+                },
+                child: Column(
+                  children: [
+                    CarouselSection(homeModel: homeModel),
+                    Container(
+                      height: 200,
+                      width: getAllWidth(context),
+                      child: GridView.builder(
+                        itemCount: homeModel.brands!.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 5),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              decoration: ShapeDecoration(
+                                  color: theme.scaffoldBackgroundColor,
+                                  shape:  ContinuousRectangleBorder(
+                                    borderRadius: getBorderRadiusFunc(40),
+                                  ),
+                              shadows:[ BoxShadow(
+                                color: theme.shadowColor.withOpacity(0.7),
+                                spreadRadius: -12,
+                                blurRadius: 10,
+                                offset: const Offset(0.1,10)
+
+                              )]
+                              ),
+                              child: FadeInImage(
+                                placeholder:
+                                    const AssetImage('assets/images/logo.png'),
+                                image:
+                                    NetworkImage(homeModel.brands![index].image!),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
             } else if (state is HomeError) {
               return Center(child: Text(state.exceptionMessage));
             }
@@ -83,8 +128,9 @@ class CarouselSection extends StatelessWidget {
                           return InkWell(
                             onTap: () async {
                               final url = homeModel.sliders![index].link!;
-                              if(await canLaunchUrlString(url)){
-                                await launchUrlString(url,mode: LaunchMode.externalApplication);
+                              if (await canLaunchUrlString(url)) {
+                                await launchUrlString(url,
+                                    mode: LaunchMode.externalApplication);
                               }
                             },
                             child: Padding(
@@ -182,11 +228,11 @@ class SliverAppBarWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'جستجو در',
+                      ' جستجو در',
                       style: TextStyle(fontSize: 16.sp, fontFamily: 'bold'),
                     ),
                     const Text(
-                      'پروکالا',
+                      '  پروکالا',
                       style: TextStyle(
                           fontSize: 18,
                           fontFamily: 'bold',

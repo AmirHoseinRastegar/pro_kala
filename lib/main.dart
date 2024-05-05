@@ -34,9 +34,6 @@ class MyApp extends StatelessWidget {
           BlocProvider<IntroCubit>(
             create: (context) => IntroCubit(),
           ),
-          // BlocProvider<HomeCubit>(
-          //   create: (context) => HomeCubit(),
-          // ),
           BlocProvider<BottomNavCubit>(
             create: (context) => BottomNavCubit(),
           ),
