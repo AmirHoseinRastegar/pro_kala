@@ -35,71 +35,92 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return CustomScrollView(
-      slivers: [
-        SliverAppBarWidget(theme: theme),
-        SliverList(
-            delegate: SliverChildListDelegate.fixed([
-          BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-            if (state is HomeLoading) {
-              return const ShimmerLoading();
-            } else if (state is HomeSuccess) {
-              HomeModel homeModel = state.homeModel;
-              return RefreshIndicator(
-                onRefresh: () async {
-                  BlocProvider.of<HomeBloc>(context).add(CallApiEvent());
-                },
-                child: Column(
+    return RefreshIndicator(
+      color: primaryColor,
+      onRefresh: () async {
+        BlocProvider.of<HomeBloc>(context).add(CallApiEvent());
+      },
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBarSection(theme: theme),
+          SliverList(
+              delegate: SliverChildListDelegate.fixed([
+            BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+              if (state is HomeLoading) {
+                return const ShimmerLoading();
+              } else if (state is HomeSuccess) {
+                HomeModel homeModel = state.homeModel;
+                return Column(
                   children: [
                     CarouselSection(homeModel: homeModel),
-                    Container(
-                      height: 200,
-                      width: getAllWidth(context),
-                      child: GridView.builder(
-                        itemCount: homeModel.brands!.length,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 5),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              decoration: ShapeDecoration(
-                                  color: theme.scaffoldBackgroundColor,
-                                  shape:  ContinuousRectangleBorder(
-                                    borderRadius: getBorderRadiusFunc(40),
-                                  ),
-                              shadows:[ BoxShadow(
-                                color: theme.shadowColor.withOpacity(0.7),
-                                spreadRadius: -12,
-                                blurRadius: 10,
-                                offset: const Offset(0.1,10)
-
-                              )]
-                              ),
-                              child: FadeInImage(
-                                placeholder:
-                                    const AssetImage('assets/images/logo.png'),
-                                image:
-                                    NetworkImage(homeModel.brands![index].image!),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    SizedBox(height: 15.sp,),
+                    BrandsSection(homeModel: homeModel, theme: theme),
+                    SizedBox(height: 12.sp,),
                   ],
+                );
+              } else if (state is HomeError) {
+                return Center(child: Text(state.exceptionMessage));
+              }
+              return const SizedBox.shrink();
+            }),
+          ]))
+        ],
+      ),
+    );
+  }
+}
+
+class BrandsSection extends StatelessWidget {
+  const BrandsSection({
+    super.key,
+    required this.homeModel,
+    required this.theme,
+  });
+
+  final HomeModel homeModel;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+     margin: EdgeInsets.symmetric(horizontal:getWidth(context, 0.04)),
+      width: getAllWidth(context),
+      child: GridView.builder(
+
+        itemCount: homeModel.brands!.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisSpacing: 10,
+                crossAxisSpacing: 55,
+                crossAxisCount: 4),
+        itemBuilder: (context, index) {
+
+          return Container(
+            decoration: ShapeDecoration(
+                color: theme.scaffoldBackgroundColor,
+                shape:  ContinuousRectangleBorder(
+                  borderRadius: getBorderRadiusFunc(40),
                 ),
-              );
-            } else if (state is HomeError) {
-              return Center(child: Text(state.exceptionMessage));
-            }
-            return const SizedBox.shrink();
-          }),
-        ]))
-      ],
+            shadows:[ BoxShadow(
+              color: theme.shadowColor.withOpacity(0.7),
+              spreadRadius: -12,
+              blurRadius: 10,
+              offset: const Offset(0.1,10)
+
+            )]
+            ),
+            child: FadeInImage(
+              placeholder:
+                  const AssetImage('assets/images/logo.png'),
+              image:
+                  NetworkImage(homeModel.brands![index].image!),
+            ),
+          );
+        },
+
+      ),
     );
   }
 }
@@ -188,8 +209,8 @@ class CarouselSection extends StatelessWidget {
   }
 }
 
-class SliverAppBarWidget extends StatelessWidget {
-  const SliverAppBarWidget({
+class SliverAppBarSection extends StatelessWidget {
+  const SliverAppBarSection({
     super.key,
     required this.theme,
   });
