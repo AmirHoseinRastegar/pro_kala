@@ -1,7 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pro_kala/core/widgets/price_number_seperator.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -10,6 +13,7 @@ import '../../../../core/const/responsive/responsive.dart';
 import '../../../../core/const/shape/border_radius.dart';
 import '../../../../core/const/shape/media_query.dart';
 import '../../../../core/const/theme/colors.dart';
+import '../../../../core/widgets/error_screen_widget.dart';
 import '../../../../core/widgets/shimmer.dart';
 import '../../../feature_bottom_nav/data/models/api_model.dart';
 import '../bloc/home_bloc.dart';
@@ -53,17 +57,176 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Column(
                   children: [
                     CarouselSection(homeModel: homeModel),
-                    SizedBox(height: 15.sp,),
+                    SizedBox(
+                      height: 17.sp,
+                    ),
                     BrandsSection(homeModel: homeModel, theme: theme),
-                    SizedBox(height: 12.sp,),
+                    SizedBox(
+                      height: 20.sp,
+                    ),
+                    Container(
+                      width: getAllWidth(context),
+                      height: getWidth(context, 0.65),
+                      color: primaryColor,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: getWidth(context, 0.25),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: getWidth(context, 0.02)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'پیشنهادات ویژه',
+                                    style: TextStyle(
+                                        color: theme.scaffoldBackgroundColor,
+                                        fontFamily: 'bold',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.sp),
+                                  ),
+                                  FadeInImage(
+                                    placeholder: const AssetImage(
+                                        'assets/images/logo.png'),
+                                    image: const AssetImage(
+                                      'assets/images/amazing/amazing_box.png',
+                                    ),
+                                    width: getWidth(context, 0.25),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ListView.builder(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: getWidth(context, 0.02)),
+                              physics: const NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: homeModel.amazing!.length,
+                              itemBuilder: (context, index) {
+                                final helper = homeModel.amazing![index];
+                                return AmazingItems(
+                                  theme: theme,
+                                  helper: helper,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 );
               } else if (state is HomeError) {
-                return Center(child: Text(state.exceptionMessage));
+                return ErrorScreenWidget(
+                  errorMsg: state.exceptionMessage.errorMsg.toString(),
+                  function: () {
+                    BlocProvider.of<HomeBloc>(context).add(CallApiEvent());
+                  },
+                );
               }
               return const SizedBox.shrink();
             }),
           ]))
+        ],
+      ),
+    );
+  }
+}
+
+class AmazingItems extends StatelessWidget {
+  const AmazingItems({super.key, required this.theme, required this.helper});
+
+  final ThemeData theme;
+  final Amazing helper;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: getWidth(context, 0.01)),
+      margin: EdgeInsets.all(getWidth(context, 0.01)),
+      width: getWidth(context, 0.375),
+      decoration: BoxDecoration(
+          color: theme.scaffoldBackgroundColor,
+          borderRadius: getBorderRadiusFunc(7)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Center(
+            child: Padding(
+              padding:  EdgeInsets.all(6.sp),
+              child: ClipRRect(
+                borderRadius: getBorderRadiusFunc(10),
+                child: FadeInImage(
+                  placeholder: const AssetImage('assets/images/logo.png'),
+                  image: NetworkImage(helper.image!),
+                  width: getWidth(context, 0.275),
+                  height: getWidth(context, 0.275),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              helper.title!,
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.start,
+              maxLines: 2,
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  radius: 17.sp,
+                  backgroundColor: primaryColor,
+                  child: Text(
+                    '%${helper.percent!}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'bold',
+                        fontSize: 13.sp),
+                  ),
+                ),
+                SizedBox(
+                  width: getWidth(context, 0.02),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      getNumberFormat(helper.defaultPrice!),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'normal',
+                          fontSize: 12.sp,
+                          decoration: TextDecoration.lineThrough),
+                    ),
+                    Text(
+                      getNumberFormat(helper.percentPrice.toString()),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'bold',
+                        fontSize: 13.sp,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -83,43 +246,37 @@ class BrandsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-     margin: EdgeInsets.symmetric(horizontal:getWidth(context, 0.04)),
+      margin: EdgeInsets.symmetric(horizontal: getWidth(context, 0.04)),
       width: getAllWidth(context),
       child: GridView.builder(
-
         itemCount: homeModel.brands!.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisSpacing: 10,
-                crossAxisSpacing: 55,
-                crossAxisCount: 4),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisSpacing: 10, crossAxisSpacing: 55, crossAxisCount: 4),
         itemBuilder: (context, index) {
-
           return Container(
             decoration: ShapeDecoration(
                 color: theme.scaffoldBackgroundColor,
-                shape:  ContinuousRectangleBorder(
+                shape: ContinuousRectangleBorder(
                   borderRadius: getBorderRadiusFunc(40),
                 ),
-            shadows:[ BoxShadow(
-              color: theme.shadowColor.withOpacity(0.7),
-              spreadRadius: -12,
-              blurRadius: 10,
-              offset: const Offset(0.1,10)
-
-            )]
-            ),
-            child: FadeInImage(
-              placeholder:
-                  const AssetImage('assets/images/logo.png'),
-              image:
-                  NetworkImage(homeModel.brands![index].image!),
+                shadows: [
+                  BoxShadow(
+                      color: theme.shadowColor.withOpacity(0.7),
+                      spreadRadius: -12,
+                      blurRadius: 10,
+                      offset: const Offset(0.1, 10))
+                ]),
+            child: Container(
+              margin: EdgeInsets.all(8),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/images/logo.png'),
+                image: NetworkImage(homeModel.brands![index].image!),
+              ),
             ),
           );
         },
-
       ),
     );
   }

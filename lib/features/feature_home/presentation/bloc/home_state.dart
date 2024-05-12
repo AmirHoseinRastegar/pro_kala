@@ -20,7 +20,7 @@ final class HomeSuccess extends HomeState {
 }
 
 final class HomeError extends HomeState {
-  final String exceptionMessage;
+  final ExceptionMessage exceptionMessage;
 
   HomeError(this.exceptionMessage);
 
