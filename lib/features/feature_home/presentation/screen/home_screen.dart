@@ -30,13 +30,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  void initState() {
-    BlocProvider.of<HomeBloc>(context).add(CallApiEvent());
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return RefreshIndicator(
@@ -61,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 17.sp,
                     ),
                     BrandsSection(homeModel: homeModel, theme: theme),
+                    SizedBox(height: 8.sp),
+
                     SizedBox(
                       height: 20.sp,
                     ),
@@ -118,6 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 8.sp),
+                    RandomSection(homeModel: homeModel)
                   ],
                 );
               } else if (state is HomeError) {
@@ -133,6 +130,56 @@ class _HomeScreenState extends State<HomeScreen> {
           ]))
         ],
       ),
+    );
+  }
+}
+
+class RandomSection extends StatelessWidget {
+  const RandomSection({
+    super.key,
+    required this.homeModel,
+  });
+
+  final HomeModel homeModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'محصولات پرفروش',
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontFamily: 'bold',
+              fontSize: 18.sp,
+            ),
+          ),
+        ),
+        GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3),
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.all(15.sp),
+              child: ClipRRect(
+                borderRadius: getBorderRadiusFunc(12),
+                child: FadeInImage(
+                    placeholder: const AssetImage('assets/images/logo.png'),
+                    image: NetworkImage(homeModel.random![index].image!)),
+              ),
+            );
+          },
+          itemCount: homeModel.random!.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+        ),
+        Center(
+            child:
+                TextButton(onPressed: () {}, child: const Text('مشاهده همه')))
+      ],
     );
   }
 }
@@ -156,10 +203,9 @@ class AmazingItems extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Center(
             child: Padding(
-              padding:  EdgeInsets.all(6.sp),
+              padding: EdgeInsets.all(6.sp),
               child: ClipRRect(
                 borderRadius: getBorderRadiusFunc(10),
                 child: FadeInImage(

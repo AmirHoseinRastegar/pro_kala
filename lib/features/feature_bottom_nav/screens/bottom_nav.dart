@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/const/theme/colors.dart';
+import '../../feature_home/presentation/bloc/home_bloc.dart';
 import '../../feature_home/presentation/screen/home_screen.dart';
 import '../bloc/bottomnav_cubit.dart';
 
@@ -15,6 +16,13 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
+  @override
+  void initState() {
+
+    super.initState();
+    BlocProvider.of<HomeBloc>(context).add(CallApiEvent());
+
+  }
   int currentIndex = 0;
   List<Widget> screens = [
     HomeScreen(),

@@ -13,7 +13,7 @@ import 'features/feature_home/presentation/screen/home_screen.dart';
 import 'features/feature_intro/presentation/domain/bloc/cubit/intro_cubit.dart';
 import 'features/feature_intro/presentation/screens/intro_screen.dart';
 import 'features/feature_intro/presentation/screens/splash_screen.dart';
-import 'features/feature_intro/unknown_screen.dart';
+import 'features/feature_intro/presentation/screens/unknown_screen.dart';
 
 void main() {
   runApp(const MyApp());

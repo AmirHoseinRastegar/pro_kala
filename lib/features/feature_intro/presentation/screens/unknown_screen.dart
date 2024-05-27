@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../core/const/shape/media_query.dart';
+import '../../../../core/const/shape/media_query.dart';
 
 class UnknownScreen extends StatelessWidget {
   const UnknownScreen({super.key});
