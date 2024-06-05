@@ -77,7 +77,7 @@ class HomeModel {
         colTwo?.add(ColTwo.fromJson(value));
       });
     }
-    if (json['col_ehree'] != null) {
+    if (json['col_three'] != null) {
       colThree = [];
       json['col_three'].forEach((value) {
         colThree?.add(ColThree.fromJson(value));

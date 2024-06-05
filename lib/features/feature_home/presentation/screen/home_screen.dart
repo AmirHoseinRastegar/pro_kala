@@ -54,67 +54,37 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 17.sp,
                     ),
                     BrandsSection(homeModel: homeModel, theme: theme),
-                    SizedBox(height: 8.sp),
-
                     SizedBox(
                       height: 20.sp,
                     ),
-                    Container(
-                      width: getAllWidth(context),
-                      height: getWidth(context, 0.65),
-                      color: primaryColor,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: getWidth(context, 0.25),
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: getWidth(context, 0.02)),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'پیشنهادات ویژه',
-                                    style: TextStyle(
-                                        color: theme.scaffoldBackgroundColor,
-                                        fontFamily: 'bold',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15.sp),
-                                  ),
-                                  FadeInImage(
-                                    placeholder: const AssetImage(
-                                        'assets/images/logo.png'),
-                                    image: const AssetImage(
-                                      'assets/images/amazing/amazing_box.png',
-                                    ),
-                                    width: getWidth(context, 0.25),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            ListView.builder(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: getWidth(context, 0.02)),
-                              physics: const NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemCount: homeModel.amazing!.length,
-                              itemBuilder: (context, index) {
-                                final helper = homeModel.amazing![index];
-                                return AmazingItems(
-                                  theme: theme,
-                                  helper: helper,
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    AmazingSection(theme: theme, homeModel: homeModel),
                     SizedBox(height: 8.sp),
-                    RandomSection(homeModel: homeModel)
+                    ProductListWidget(
+                      list: homeModel.random!,
+                      title: 'محصولات پرفروش',
+                    ),
+                    CategoryBannersSection(homeModel: homeModel),
+                    SizedBox(height: 10.sp),
+                    ProductListWidget(
+                      list: homeModel.colOne!,
+                      title: homeModel.colOneName,
+                    ),
+                    ProductListWidget(
+                      list: homeModel.colTwo!,
+                      title: homeModel.colTwoName,
+                    ),
+                    ProductListWidget(
+                      list: homeModel.colThree!,
+                      title: homeModel.colThreeName,
+                    ),
+                    ProductListWidget(
+                      list: homeModel.colFour!,
+                      title: homeModel.colFourName,
+                    ),
+                    ProductListWidget(
+                      list: homeModel.colFive!,
+                      title: homeModel.colFiveName,
+                    ),
                   ],
                 );
               } else if (state is HomeError) {
@@ -134,13 +104,118 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class RandomSection extends StatelessWidget {
-  const RandomSection({
+class AmazingSection extends StatelessWidget {
+  const AmazingSection({
+    super.key,
+    required this.theme,
+    required this.homeModel,
+  });
+
+  final ThemeData theme;
+  final HomeModel homeModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: getAllWidth(context),
+      height: getWidth(context, 0.65),
+      color: primaryColor,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            Container(
+              width: getWidth(context, 0.25),
+              margin: EdgeInsets.symmetric(horizontal: getWidth(context, 0.02)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'پیشنهادات ویژه',
+                    style: TextStyle(
+                        color: theme.scaffoldBackgroundColor,
+                        fontFamily: 'bold',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp),
+                  ),
+                  FadeInImage(
+                    placeholder: const AssetImage('assets/images/logo.png'),
+                    image: const AssetImage(
+                      'assets/images/amazing/amazing_box.png',
+                    ),
+                    width: getWidth(context, 0.25),
+                  ),
+                ],
+              ),
+            ),
+            ListView.builder(
+              padding:
+                  EdgeInsets.symmetric(horizontal: getWidth(context, 0.02)),
+              physics: const NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: homeModel.amazing!.length,
+              itemBuilder: (context, index) {
+                final helper = homeModel.amazing![index];
+                return AmazingItems(
+                  theme: theme,
+                  helper: helper,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CategoryBannersSection extends StatelessWidget {
+  const CategoryBannersSection({
     super.key,
     required this.homeModel,
   });
 
   final HomeModel homeModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 1.75,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 20,
+      ),
+      itemBuilder: (context, index) {
+        return ClipRRect(
+          borderRadius: getBorderRadiusFunc(10),
+          child: FadeInImage(
+            placeholder: const AssetImage('assets/images/logo.png'),
+            image: NetworkImage(homeModel.categoryBanner![index].image!),
+            height: getWidth(context, 0.32),
+            width: getAllWidth(context),
+            fit: BoxFit.cover,
+          ),
+        );
+      },
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: homeModel.categoryBanner!.length,
+      shrinkWrap: true,
+    );
+  }
+}
+
+class ProductListWidget extends StatelessWidget {
+  const ProductListWidget({
+    super.key,
+    required this.list,
+    this.title,
+  });
+
+  final List<dynamic> list;
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +225,7 @@ class RandomSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            'محصولات پرفروش',
+            title!,
             textAlign: TextAlign.right,
             style: TextStyle(
               fontFamily: 'bold',
@@ -168,11 +243,11 @@ class RandomSection extends StatelessWidget {
                 borderRadius: getBorderRadiusFunc(12),
                 child: FadeInImage(
                     placeholder: const AssetImage('assets/images/logo.png'),
-                    image: NetworkImage(homeModel.random![index].image!)),
+                    image: NetworkImage(list[index].image!)),
               ),
             );
           },
-          itemCount: homeModel.random!.length,
+          itemCount: list.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
         ),
