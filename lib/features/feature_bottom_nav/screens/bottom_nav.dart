@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/const/theme/colors.dart';
+import '../../feature_category/peresentation/screens/category_screen.dart';
 import '../../feature_home/presentation/bloc/home_bloc.dart';
 import '../../feature_home/presentation/screen/home_screen.dart';
 import '../bloc/bottomnav_cubit.dart';
@@ -26,7 +27,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int currentIndex = 0;
   List<Widget> screens = [
     HomeScreen(),
-    Container(),
+    CategoryScreen(),
     Container(),
     Container(),
   ];
@@ -64,7 +65,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   BottomNavigationBarItem(
                     icon: Icon(Icons.person),
                     label: 'پروفایل',
-                    activeIcon: Icon(Icons.settings),
+                    activeIcon: Icon(Icons.person),
                   ),
                 ],
                 currentIndex: BlocProvider
