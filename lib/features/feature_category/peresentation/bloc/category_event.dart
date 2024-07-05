@@ -1,11 +1,14 @@
 part of 'category_bloc.dart';
 
 @immutable
-sealed class CategoryEvent {}
+sealed class CategoryEvent extends Equatable{}
 
 class CallCategoryEvent extends CategoryEvent{
-final   String phoneNumber;
 
-  CallCategoryEvent(this.phoneNumber);
+  CallCategoryEvent();
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
 
 }

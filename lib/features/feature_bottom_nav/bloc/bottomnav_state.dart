@@ -1,6 +1,6 @@
 part of 'bottomnav_cubit.dart';
 
 @immutable
-sealed class BottomnavState {}
+sealed class BottomNavState {}
 
-final class BottomnavInitial extends BottomnavState {}
+final class BottomNavInitial extends BottomNavState {}

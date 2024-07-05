@@ -24,10 +24,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
     BlocProvider.of<HomeBloc>(context).add(CallApiEvent());
 
   }
-  int currentIndex = 0;
   List<Widget> screens = [
-    HomeScreen(),
-    CategoryScreen(),
+    const HomeScreen(),
+    const CategoryScreen(),
     Container(),
     Container(),
   ];
