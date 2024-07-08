@@ -22,4 +22,8 @@ final class AuthSuccess extends AuthState {
 
 }
 
-final class AuthError extends AuthState {}
+final class AuthError extends AuthState {
+  final ExceptionMessage errorMessage;
+
+  AuthError(this.errorMessage);
+}

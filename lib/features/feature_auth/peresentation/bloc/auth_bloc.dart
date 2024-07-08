@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
+import '../../../../core/widgets/error_message.dart';
 import '../../repository/auth_repository.dart';
 
 part 'auth_event.dart';

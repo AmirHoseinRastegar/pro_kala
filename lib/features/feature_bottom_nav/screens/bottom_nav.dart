@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pro_kala/features/feature_auth/peresentation/cubit/token_check_cubit.dart';
+import 'package:pro_kala/features/feature_auth/screens/auth_screen.dart';
 
 import '../../../core/const/theme/colors.dart';
+import '../../../token_check_router.dart';
 import '../../feature_category/peresentation/screens/category_screen.dart';
 import '../../feature_home/presentation/bloc/home_bloc.dart';
 import '../../feature_home/presentation/screen/home_screen.dart';
@@ -21,13 +24,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void initState() {
 
     super.initState();
+
     BlocProvider.of<HomeBloc>(context).add(CallApiEvent());
+    BlocProvider.of<TokenCheckCubit>(context).checkToken();
 
   }
   List<Widget> screens = [
     const HomeScreen(),
     const CategoryScreen(),
-    Container(),
+    const CheckCartScreen(),
     Container(),
   ];
 

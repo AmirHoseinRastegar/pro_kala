@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pro_kala/features/feature_auth/peresentation/cubit/token_check_cubit.dart';
 
 import 'core/const/theme/theme.dart';
 import 'features/feature_bottom_nav/bloc/bottomnav_cubit.dart';
@@ -36,6 +37,8 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<BottomNavCubit>(
             create: (context) => BottomNavCubit(),
+          ),BlocProvider<TokenCheckCubit>(
+            create: (context) => TokenCheckCubit(),
           ),
           BlocProvider<HomeBloc>(
             create: (context) => HomeBloc(HomeRepository()),
