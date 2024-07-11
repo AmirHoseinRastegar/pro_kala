@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pro_kala/core/widgets/price_number_seperator.dart';
+import 'package:pro_kala/features/feature_products_detail/screen/product_detail_screen.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -237,13 +238,22 @@ class ProductListWidget extends StatelessWidget {
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3),
           itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.all(15.sp),
-              child: ClipRRect(
-                borderRadius: getBorderRadiusFunc(12),
-                child: FadeInImage(
-                    placeholder: const AssetImage('assets/images/logo.png'),
-                    image: NetworkImage(list[index].image!)),
+            return InkWell(
+              onTap: () {
+
+                Navigator.of(context)
+                    .pushNamed(ProductDetail.screenId, arguments: {
+                      'product_id':list[index].id
+                });
+              },
+              child: Padding(
+                padding: EdgeInsets.all(15.sp),
+                child: ClipRRect(
+                  borderRadius: getBorderRadiusFunc(12),
+                  child: FadeInImage(
+                      placeholder: const AssetImage('assets/images/logo.png'),
+                      image: NetworkImage(list[index].image!)),
+                ),
               ),
             );
           },

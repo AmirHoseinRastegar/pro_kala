@@ -8,7 +8,6 @@ class CallCategoryEvent extends CategoryEvent{
   CallCategoryEvent();
 
   @override
-  // TODO: implement props
   List<Object?> get props => throw UnimplementedError();
 
 }

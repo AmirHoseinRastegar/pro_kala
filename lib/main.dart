@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pro_kala/features/feature_auth/peresentation/cubit/token_check_cubit.dart';
+import 'package:pro_kala/features/feature_products_detail/screen/product_detail_screen.dart';
 
 import 'core/const/theme/theme.dart';
 import 'features/feature_bottom_nav/bloc/bottomnav_cubit.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
           onUnknownRoute: (settings) => MaterialPageRoute(
               builder: (BuildContext context) => const UnknownScreen()),
           routes: {
+            ProductDetail.screenId:(context)=> const ProductDetail(),
             SplashScreen.splashScreenId: (context) => const SplashScreen(),
             IntroScreen.introScreenId: (context) => const IntroScreen(),
             HomeScreen.homeScreenId: (context) => const HomeScreen(),
