@@ -27,6 +27,8 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
       emit(ProductDetailSuccess(productDetailModel));
     } catch (e) {
       throw Exception(e.toString());
+    } finally {
+      emit(ProductDetailInitial());
     }
   }
 }
