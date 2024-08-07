@@ -17,6 +17,8 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
     on<CallProductDetailEvent>(_callProductDetailBloc);
   }
 
+  List<String> newGallery = [];
+
   Future<void> _callProductDetailBloc(
       CallProductDetailEvent event, Emitter<ProductDetailState> emit) async {
     emit(ProductDetailLoading());
@@ -24,11 +26,17 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
       final ProductDetailModel productDetailModel =
           await productDetailRepository.fetchProductDetailRepository(event.id);
 
+      if (productDetailModel.gallery != null) {
+        newGallery.add(productDetailModel.product!.image!);
+
+        for (int index = 0; index < productDetailModel.gallery!.length; index++) {
+          newGallery.add(productDetailModel.gallery![index].path!);
+        }
+      }
+
       emit(ProductDetailSuccess(productDetailModel));
     } catch (e) {
       throw Exception(e.toString());
-    } finally {
-      emit(ProductDetailInitial());
     }
   }
 }
